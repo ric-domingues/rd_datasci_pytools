@@ -36,8 +36,6 @@ def altimetry_file_list(altimetry_rt,altimetry_dt):
         #print(file_use)
   return file_uses_use, datetime_altimetry, timesecs_altimetry
 
-
-
 #--------------------------------------------------- Generic Function to read AVISO files to subset
 def read_altimetry_sha(file_use,LON_LIM,LAT_LIM):
   print('     - reading AVISO: '+file_use)
@@ -108,5 +106,33 @@ def box_average_profile(var,z,dz,maxdepth):
   box_var[mask] = np.nan
   box_varnonans[zref>np.nanmax(z)+dz]=np.nan
   return zref, box_var, box_varnonans
+
+# =============================================== PLOT TC tracks (Wind in Knots, Saffir-Sympson Scale)
+def plot_TCs_track_lines(ax,TC_lon,TC_lat,TC_wind,szfac=1,lincol='lightgray',alp_lin=1):
+
+  for i in range(0,len(TC_lon)-1):
+    lon_aux=TC_lon[i:i+2]
+    lat_aux=TC_lat[i:i+2]
+
+    if(TC_wind[i]>=0) & (TC_wind[i]<50):
+      lbl_td, = ax.plot(lon_aux,lat_aux,'--',linewidth=0.5*szfac,color='k',zorder=35,alpha=alp_lin)
+
+    elif(TC_wind[i]>=34) & (TC_wind[i]<64):
+      lbl_ts, = ax.plot(lon_aux,lat_aux,'-',linewidth=2*szfac,color=[0,0,.8],zorder=35,alpha=alp_lin)
+
+    elif(TC_wind[i]>=64) & (TC_wind[i]<83):
+      lbl_cat1, = ax.plot(lon_aux,lat_aux,'-',linewidth=2*szfac,color=[.1,.9,.9],zorder=35,alpha=alp_lin)
+
+    elif(TC_wind[i]>=83) & (TC_wind[i]<96):
+      lbl_cat2, = ax.plot(lon_aux,lat_aux,'-',linewidth=2*szfac,color=[.4,.9,.4],zorder=35,alpha=alp_lin)
+
+    elif(TC_wind[i]>=96) & (TC_wind[i]<113):
+      lbl_cat3, = ax.plot(lon_aux,lat_aux,'-',linewidth=2*szfac,color=[.9,.9,.3],zorder=35,alpha=alp_lin)
+
+    elif(TC_wind[i]>=113) & (TC_wind[i]<137):
+      lbl_cat4, = ax.plot(lon_aux,lat_aux,'-',linewidth=2*szfac,color='#FF8000',zorder=35,alpha=alp_lin)
+
+    elif(TC_wind[i]>=137):
+      lbl_cat5, = ax.plot(lon_aux,lat_aux,'-',linewidth=2*szfac,color='red',zorder=35,alpha=alp_lin)
 
 
