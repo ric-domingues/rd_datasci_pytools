@@ -72,6 +72,103 @@ def read_altimetry_sha(file_use,LON_LIM,LAT_LIM):
   
   return sha_out, lon_sha, lat_sha, lon_out, lat_out
 
+#--------------------------------------------------- Generic Function to read AVISO files to subset
+def read_altimetry_sha(file_use,LON_LIM,LAT_LIM):
+  print('     - reading AVISO: '+file_use)
+  nc_fid = nc.Dataset(file_use,'r')
+  
+  lon_sha = nc_fid.variables['longitude'][:] 
+  lon_sha[lon_sha>180] = lon_sha[lon_sha>180] - 360    
+  srt_lon = np.argsort(lon_sha)
+  lon_sha = lon_sha[srt_lon] 
+  lat_sha = nc_fid.variables['latitude'][:] 
+  lon_sha2, lat_sha2 = np.meshgrid(lon_sha, lat_sha)
+  sha = nc_fid.variables['sla'][:][0]
+  sha = sha[:,srt_lon]
+
+  sha_out = sha
+  lon_out = lon_sha2
+  lat_out = lat_sha2
+  
+  ind_lon = (lon_sha>=LON_LIM[0]) & (lon_sha<=LON_LIM[1])
+  sha_out = sha_out[:,ind_lon]
+  lon_out = lon_out[:,ind_lon]
+  lat_out = lat_out[:,ind_lon]
+  lon_sha = lon_sha[ind_lon]
+  
+  ind_lat = (lat_sha>=LAT_LIM[0]) & (lat_sha<=LAT_LIM[1])
+  sha_out = sha_out[ind_lat,:]
+  lon_out = lon_out[ind_lat,:]
+  lat_out = lat_out[ind_lat,:]
+  lat_sha = lat_sha[ind_lat]
+    
+  #plt.contourf(lon_out,lat_out,sha_out),
+  #plt.show()
+  #exit()
+  
+  return sha_out, lon_sha, lat_sha, lon_out, lat_out
+
+#--------------------------------------------------- Generic Function to read AVISO files to subset
+def read_altimetry_sha_all(file_use,LON_LIM,LAT_LIM):
+  print('     - reading AVISO: '+file_use)
+  nc_fid = nc.Dataset(file_use,'r')
+
+  lon_sha = nc_fid.variables['longitude'][:]
+  lon_sha[lon_sha>180] = lon_sha[lon_sha>180] - 360
+  srt_lon = np.argsort(lon_sha)
+  lon_sha = lon_sha[srt_lon]
+  lat_sha = nc_fid.variables['latitude'][:]
+  lon_sha2, lat_sha2 = np.meshgrid(lon_sha, lat_sha)
+
+  sha = nc_fid.variables['sla'][:][0]
+  sha = sha[:,srt_lon]
+  sha[sha<-1e3] = np.nan
+
+  adt = nc_fid.variables['adt'][:][0]
+  adt = adt[:,srt_lon]
+  adt[adt<-1e3] = np.nan
+
+  vgos = nc_fid.variables['vgos'][:][0]
+  vgos = vgos[:,srt_lon]
+  vgos[vgos<-1e3] = np.nan
+
+  ugos = nc_fid.variables['ugos'][:][0]
+  ugos = vgos[:,srt_lon]
+  ugos[ugos<-1e3] = np.nan
+
+  sha_out = sha
+  adt_out = adt
+  vgos_out= vgos
+  ugos_out= ugos
+
+  lon_out = lon_sha2
+  lat_out = lat_sha2
+
+  ind_lon = (lon_sha>=LON_LIM[0]) & (lon_sha<=LON_LIM[1])
+  sha_out = sha_out[:,ind_lon]
+  adt_out = adt_out[:,ind_lon]
+  vgos_out= vgos_out[:,ind_lon]
+  ugos_out= ugos_out[:,ind_lon]
+
+  lon_out = lon_out[:,ind_lon]
+  lat_out = lat_out[:,ind_lon]
+  lon_sha = lon_sha[ind_lon]
+
+  ind_lat = (lat_sha>=LAT_LIM[0]) & (lat_sha<=LAT_LIM[1])
+  sha_out = sha_out[ind_lat,:]
+  adt_out = adt_out[:,ind_lon]
+  vgos_out= vgos_out[:,ind_lon]
+  ugos_out= ugos_out[:,ind_lon]
+
+  lon_out = lon_out[ind_lat,:]
+  lat_out = lat_out[ind_lat,:]
+  lat_sha = lat_sha[ind_lat]
+
+  #plt.contourf(lon_out,lat_out,sha_out),
+  #plt.show()
+  #exit()
+  return sha_out, adt_out, vgos_out, ugos_out, lon_out, lat_out
+
 # =============================================== PLOT TC tracks (Wind in Knots, Saffir-Sympson Scale)
 def plot_TCs_track(ax,TC_lon,TC_lat,TC_wind,szfac=1):
 
