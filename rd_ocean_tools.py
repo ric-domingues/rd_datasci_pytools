@@ -73,42 +73,6 @@ def read_altimetry_sha(file_use,LON_LIM,LAT_LIM):
   return sha_out, lon_sha, lat_sha, lon_out, lat_out
 
 #--------------------------------------------------- Generic Function to read AVISO files to subset
-def read_altimetry_sha(file_use,LON_LIM,LAT_LIM):
-  print('     - reading AVISO: '+file_use)
-  nc_fid = nc.Dataset(file_use,'r')
-  
-  lon_sha = nc_fid.variables['longitude'][:] 
-  lon_sha[lon_sha>180] = lon_sha[lon_sha>180] - 360    
-  srt_lon = np.argsort(lon_sha)
-  lon_sha = lon_sha[srt_lon] 
-  lat_sha = nc_fid.variables['latitude'][:] 
-  lon_sha2, lat_sha2 = np.meshgrid(lon_sha, lat_sha)
-  sha = nc_fid.variables['sla'][:][0]
-  sha = sha[:,srt_lon]
-
-  sha_out = sha
-  lon_out = lon_sha2
-  lat_out = lat_sha2
-  
-  ind_lon = (lon_sha>=LON_LIM[0]) & (lon_sha<=LON_LIM[1])
-  sha_out = sha_out[:,ind_lon]
-  lon_out = lon_out[:,ind_lon]
-  lat_out = lat_out[:,ind_lon]
-  lon_sha = lon_sha[ind_lon]
-  
-  ind_lat = (lat_sha>=LAT_LIM[0]) & (lat_sha<=LAT_LIM[1])
-  sha_out = sha_out[ind_lat,:]
-  lon_out = lon_out[ind_lat,:]
-  lat_out = lat_out[ind_lat,:]
-  lat_sha = lat_sha[ind_lat]
-    
-  #plt.contourf(lon_out,lat_out,sha_out),
-  #plt.show()
-  #exit()
-  
-  return sha_out, lon_sha, lat_sha, lon_out, lat_out
-
-#--------------------------------------------------- Generic Function to read AVISO files to subset
 def read_altimetry_sha_all(file_use,LON_LIM,LAT_LIM,resort_lon=True):
   print('     - reading AVISO: '+file_use)
   nc_fid = nc.Dataset(file_use,'r')
