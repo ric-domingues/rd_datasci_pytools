@@ -9,6 +9,8 @@ import matplotlib.ticker as mticker
 import numpy as np
 import cartopy.io.shapereader as shpreader
 
+from scipy import signal
+from scipy import interpolate
 # USAGE TO IMPORT
 #import rd_file_tools as rd_files
 
@@ -110,7 +112,31 @@ def find_nearest_point_2D(x2d,y2d,xp,yp,dx):
 
   return imask
 
+#---------------------------------------------------
 def interp1(x,y,xnew):
   f = interpolate.interp1d(x, y)
   ynew = f(xnew)# use interpolation function returned by `interp1d`
   return ynew
+
+#---------------------------------------------------
+def interp2(x1d,y1d,z,xnew,ynew):
+
+  mask = np.zeros(z.shape)
+  mask[np.isnan(z)] = 1
+  fm = interpolate.interp2d(x1d, y1d, mask)
+  mask_new = fm(xnew,ynew) 
+
+  zp = inpaint_nans(z)
+  fz = interpolate.interp2d(x1d, y1d, zp) 
+  z_new = fz(xnew,ynew)
+  z_new[mask_new>0.9] = np.nan
+
+  return z_new
+
+
+
+
+
+
+
+
