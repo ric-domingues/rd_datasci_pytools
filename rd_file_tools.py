@@ -41,3 +41,19 @@ def filename2date(filename):
   
   
   return yyyy,mm,dd,date_str
+
+#--------------------------------------------------- List with Date names
+def list_files_bydate(direc,pattern):
+  files_list      =[] 
+  datetime_files  =[]
+  timesec_files   =[]
+
+  file_uses_use=glob.glob(direc+"/"+pattern)
+
+  for file_use in file_uses_use:
+    date_file_use=datetime.strptime(os.path.basename(file_use)[0:8], '%Y%m%d')
+    datetime_files.append(date_file_use)
+    timesec_files.append( calendar.timegm( date_file_use.timetuple() ) )
+    files_list.append(file_use)
+
+  return files_list, datetime_files, timesec_files
