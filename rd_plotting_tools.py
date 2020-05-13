@@ -31,7 +31,8 @@ def plot_properties(ax,fsize=12,xticks=[],yticks=[],xlabel='x-label',ylabel='y-l
 def imagesc(var):
   fig = plt.figure(figsize=(4.5, 5))
   ax1 = fig.add_axes([0.1, 0.1, .85, .85])
-  ax1.pcolor(var)
+  cf = ax1.pcolor(var,cmap='jet')
+  fig.colorbar(cf)
   plt.show()
 
 #---------------------------------------------------
