@@ -39,6 +39,32 @@ def altimetry_file_list(altimetry_rt,altimetry_dt):
         #print(file_use)
   return file_uses_use, datetime_altimetry, timesecs_altimetry, altim_fyle_type
 
+#--------------------------------------------------- Function to List AVISO RT and DT files
+def altimetry_file_list_all(altimetry_rt,altimetry_dt):
+  
+  file_uses_rt=glob.glob(altimetry_rt+"/*[!latest].nc")
+  file_uses_use=glob.glob(altimetry_dt+"/*.nc")
+  
+  datetime_altimetry=[]
+  timesecs_altimetry=[]
+  altim_fyle_type   =[]
+  
+  for file_use in file_uses_use:
+    date_file_use=datetime.strptime(os.path.basename(file_use)[24:32], '%Y%m%d')
+    datetime_altimetry.append(date_file_use)
+    timesecs_altimetry.append( calendar.timegm( date_file_use.timetuple() ) )
+    altim_fyle_type.append('DT')
+  
+  date_dt_last = datetime_altimetry[-1]
+  for file_use in file_uses_rt:  
+    date_file_use=datetime.strptime(os.path.basename(file_use)[25:33], '%Y%m%d')   
+    file_uses_use.append(file_use)
+    datetime_altimetry.append(date_file_use)
+    timesecs_altimetry.append( calendar.timegm( date_file_use.timetuple() ) )
+    altim_fyle_type.append('RT')
+        #print(file_use)
+  return file_uses_use, datetime_altimetry, timesecs_altimetry, altim_fyle_type  
+
 #--------------------------------------------------- Generic Function to read AVISO files to subset
 def read_altimetry_sha(file_use,LON_LIM,LAT_LIM):
   print('     - reading AVISO: '+file_use)
