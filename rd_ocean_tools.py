@@ -55,9 +55,8 @@ def altimetry_file_list_all(altimetry_rt,altimetry_dt):
     timesecs_altimetry.append( calendar.timegm( date_file_use.timetuple() ) )
     altim_fyle_type.append('DT')
   
-  date_dt_last = datetime_altimetry[-1]
   for file_use in file_uses_rt:  
-    date_file_use=datetime.strptime(os.path.basename(file_use)[25:33], '%Y%m%d')   
+    
     file_uses_use.append(file_use)
     datetime_altimetry.append(date_file_use)
     timesecs_altimetry.append( calendar.timegm( date_file_use.timetuple() ) )
