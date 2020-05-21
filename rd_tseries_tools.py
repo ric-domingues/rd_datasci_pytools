@@ -174,3 +174,61 @@ def datenum(t_vec):
     # and PYTHON has a preset date of 1-1-0001
   t_num = np.array(t_num)
   return t_num #- 366
+
+# =============================================== PLOT TC tracks (Wind in Knots, Saffir-Sympson Scale)
+def fft_calc(amplitude,samplingFrequency=60,nint=10,alph=95):
+
+  freq_out = None
+  period_out = None
+  psd_out = None
+
+  white_psd = None
+
+# At what intervals time points are sampled
+
+  samplingInterval       = 1 / samplingFrequency;
+  fourierTransform = np.fft.fft(amplitude)/len(amplitude)
+  fourierTransform = fourierTransform[range(int(len(amplitude)/2))] # Exclude sampling frequency
+
+  tpCount     = len(amplitude)
+  values      = np.arange(int(tpCount/2))
+  timePeriod  = tpCount/samplingFrequency
+
+  freq_out = values/timePeriod
+  freq_out2 = freq_out.copy()
+  freq_out2[freq_out2<1e-10] = np.nan
+  period_out = 1/freq_out2
+  psd_out = abs(fourierTransform)
+
+
+  wht_aux = np.zeros([nint,len(psd_out)])
+  white_psd = np.zeros([len(psd_out)])
+
+
+  # calculates a reference spectrum from white noise with same mean and variance
+  #  for confidence interval evaluation 
+
+  mean = np.nanmean(amplitude)
+  std = np.nanstd(amplitude)
+  num_samples = len(amplitude)
+
+  for i in range(0,nint):
+
+    samples = np.random.normal(loc=mean, scale=std, size=num_samples)
+    fourierTransform2 = np.fft.fft(samples)/len(samples)
+    fourierTransform2 = fourierTransform2[range(int(len(samples)/2))] # Exclude sampling frequency
+
+    wht_aux[i,:] = abs(fourierTransform2)
+
+  for j in range(0,len(psd_out)):
+    
+    white_psd[j] = np.percentile(wht_aux[:,j],alph,axis=0)
+  
+
+  return freq_out, period_out, psd_out, white_psd
+
+
+  
+
+
+
