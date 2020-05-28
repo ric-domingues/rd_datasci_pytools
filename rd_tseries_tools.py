@@ -84,6 +84,16 @@ def timenum2datetime(timenum,refdate):
     
   return time_datetimeobj
 
+#--------------------------------------------------- function to simple moving average
+def timenum2datetime_ndays(timenum,refdate):
+
+
+  time_datetimeobj = []
+  for i in range(0,len(timenum)):
+    d = dt.datetime(refdate[0],refdate[1],refdate[2],refdate[3],refdate[4]) + dt.timedelta(days=timenum[i])
+    time_datetimeobj.append(d)
+
+  return time_datetimeobj
 
 #--------------------------------------------------- ceil datetime object to next day 
 def ceil_dt(date_use):

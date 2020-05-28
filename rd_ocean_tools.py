@@ -10,6 +10,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import fnmatch
 import os
+
+import rd_tseries_tools as rd_tseries
 #========================================================= FUNCTION to list file_uses from AVISO RT and DT
 
 #--------------------------------------------------- Function to List AVISO RT and DT files
@@ -227,3 +229,37 @@ def plot_TCs_track_lines(ax,TC_lon,TC_lat,TC_wind,szfac=1,lincol='lightgray',alp
       lbl_cat5, = ax.plot(lon_aux,lat_aux,'-',linewidth=2*szfac,color='red',zorder=35,alpha=alp_lin)
 
 
+#--------------------------------------------------- Function to read OISSTv2 files timevariable
+def read_oisst_time(file_use):
+  #print('     - reading OISSTv2: '+file_use)
+  nc_fid = nc.Dataset(file_use,'r')
+
+  sst_days = nc_fid.variables['time'][:] #days since 1800-01-01 00:00:00
+ 
+  sst_dates = rd_tseries.timenum2datetime_ndays(sst_days,[1800,1,1,0,0,0])
+
+  return sst_dates
+
+#--------------------------------------------------- Function to read OISSTv2 files SST field
+
+def read_oisst_sst(file_use,idvar):
+  print('     - reading OISSTv2: '+file_use,idvar)
+  nc_fid = nc.Dataset(file_use,'r')
+ 
+  sst_out = None
+  lon_sst = None
+  lat_sst = None 
+
+  sst = nc_fid.variables['sst'][idvar,:,:]
+  lon = nc_fid.variables['lon'][:]
+  lat = nc_fid.variables['lat'][:]
+
+  lon[lon>180] = lon[lon>180] - 360
+  srt_lon = np.argsort(lon)
+  lon = lon[srt_lon]
+
+  sst_out = np.double(sst[:,srt_lon])
+  sst_out[sst_out>1e3] = np.nan
+  
+
+  return sst_out, lon, lat
