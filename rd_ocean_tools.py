@@ -260,6 +260,6 @@ def read_oisst_sst(file_use,idvar):
 
   sst_out = np.double(sst[:,srt_lon])
   sst_out[sst_out>1e3] = np.nan
+  sst_out[sst_out<-1e3] = np.nan
   
-
   return sst_out, lon, lat
