@@ -8,6 +8,7 @@ import cartopy.feature as cfeature
 import matplotlib.ticker as mticker
 import numpy as np
 import cartopy.io.shapereader as shpreader
+import matplotlib.path as mpltPath
 
 from scipy import signal
 from scipy import interpolate
@@ -23,7 +24,7 @@ def create_map(fig,axes_position,extent,lat_spc=5,lon_spc=5,land_res='50m',fcolo
   land_50m = NaturalEarthFeature('physical', 'land', land_res,
                                         edgecolor='face',
                                         facecolor='black')
-  ax.add_feature(land_50m, edgecolor=ecolor,facecolor=fcolor,zorder=1)
+  ax.add_feature(land_50m, edgecolor=ecolor,facecolor=fcolor,zorder=10)
   ax.add_feature(cfeature.BORDERS, edgecolor=ecolor,zorder=26,alpha=0.6)
   ax.outline_patch.set_linewidth(axs_wid)
 
