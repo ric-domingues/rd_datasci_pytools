@@ -12,6 +12,8 @@ import fnmatch
 import os
 
 import rd_tseries_tools as rd_tseries
+from scipy import signal
+from scipy import interpolate
 #========================================================= FUNCTION to list file_uses from AVISO RT and DT
 
 #--------------------------------------------------- Function to List AVISO RT and DT files
@@ -66,6 +68,22 @@ def altimetry_file_list_all(altimetry_rt,altimetry_dt):
     altim_fyle_type.append('RT')
         #print(file_use)
   return file_uses_use, datetime_altimetry, timesecs_altimetry, altim_fyle_type  
+
+#--------------------------------------------------- Function to fill 2D gaps in data
+def inpaint_nans(im0):
+    nans = np.isnan(im0)
+    im = im0
+    ipn_kernel = np.array([[1,1,1],[1,0,1],[1,1,1]]) # kernel for inpaint_nans
+    while np.sum(nans)>0:
+        im[nans] = 0
+        vNeighbors = signal.convolve2d((nans==False),ipn_kernel,mode='same',boundary='symm')
+        im2 = signal.convolve2d(im,ipn_kernel,mode='same',boundary='symm')
+        im2[vNeighbors>0] = im2[vNeighbors>0]/vNeighbors[vNeighbors>0]
+        im2[vNeighbors==0] = np.nan
+        im2[(nans==False)] = im[(nans==False)]
+        im = im2
+        nans = np.isnan(im)
+    return im2
 
 #--------------------------------------------------- Generic Function to read AVISO files to subset
 def read_altimetry_sha(file_use,LON_LIM,LAT_LIM):
