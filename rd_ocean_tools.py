@@ -192,8 +192,8 @@ def plot_TCs_track(ax,TC_lon,TC_lat,TC_wind,szfac=1):
   lbl_cat1, = ax.plot(TC_lon[(TC_wind>=64) & (TC_wind<83) ],TC_lat[(TC_wind>64) & (TC_wind<=83)],'o',markeredgewidth=1.5*szfac, markersize=6.5*szfac,color=[.1,.9,.9],markeredgecolor='k',zorder=35)
   lbl_cat2, = ax.plot(TC_lon[(TC_wind>=83) & (TC_wind<96) ],TC_lat[(TC_wind>83) & (TC_wind<=96)],'o',markeredgewidth=1.5*szfac, markersize=6.5*szfac,color=[.4,.9,.4],markeredgecolor='k',zorder=35)
   lbl_cat3, = ax.plot(TC_lon[(TC_wind>=96) & (TC_wind<113) ],TC_lat[(TC_wind>96) & (TC_wind<=113)],'o',markeredgewidth=1.5*szfac, markersize=7*szfac,color=[.9,.9,.3],markeredgecolor='k',zorder=35)
-  lbl_cat4, = ax.plot(TC_lon[(TC_wind>=113) & (TC_wind<137) ],TC_lat[(TC_wind>113) & (TC_wind<=137)],'o',markeredgewidth=1.5*szfac, markersize=7*szfac,color=[.9,.5,.1],markeredgecolor='k',zorder=35)
-  lbl_cat5, = ax.plot(TC_lon[(TC_wind>=137)],TC_lat[(TC_wind>137)],'o',markeredgewidth=1.5*szfac, markersize=7*szfac,color=[.9,.4,.4],markeredgecolor='k',zorder=35)
+  lbl_cat4, = ax.plot(TC_lon[(TC_wind>=113) & (TC_wind<137) ],TC_lat[(TC_wind>113) & (TC_wind<=137)],'o',markeredgewidth=1.5*szfac, markersize=7*szfac,color='#FF8000',markeredgecolor='k',zorder=35)
+  lbl_cat5, = ax.plot(TC_lon[(TC_wind>=137)],TC_lat[(TC_wind>137)],'o',markeredgewidth=1.5*szfac, markersize=7*szfac,color='red',markeredgecolor='k',zorder=35)
 
   lbl_cats = (lbl_td, lbl_ts, lbl_cat1, lbl_cat2, lbl_cat3, lbl_cat4, lbl_cat5)
   lbl_strs = ('TD', 'TS', 'Cat-1', 'Cat-2', 'Cat-3', 'Cat-4', 'Cat-5')

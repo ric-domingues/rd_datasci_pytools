@@ -16,7 +16,7 @@ from scipy import interpolate
 #import rd_file_tools as rd_files
 
 # =============================================== Creates MAP and Includes Coastline
-def create_map(fig,axes_position,extent,lat_spc=5,lon_spc=5,land_res='50m',fcolor=[.3,.3,.3],ecolor='black',xlbl_plot=True,ylbl_plot=True,alp_grd=1,axs_wid=1):
+def create_map(fig,axes_position,extent,lat_spc=5,lon_spc=5,land_res='50m',fcolor=[.3,.3,.3],ecolor='black',xlbl_plot=True,ylbl_plot=True,alp_grd=1,axs_wid=1,fsize=12):
 
   ax = fig.add_axes(axes_position, projection=ccrs.PlateCarree())
   ax.set_extent(extent, ccrs.PlateCarree())
@@ -38,8 +38,8 @@ def create_map(fig,axes_position,extent,lat_spc=5,lon_spc=5,land_res='50m',fcolo
 
   gl.xformatter = LONGITUDE_FORMATTER
   gl.yformatter = LATITUDE_FORMATTER
-  gl.xlabel_style = {'size': 12}
-  gl.ylabel_style = {'size': 12}
+  gl.xlabel_style = {'size': fsize}
+  gl.ylabel_style = {'size': fsize}
 
   gl.xlabels_bottom = xlbl_plot
   gl.ylabels_left   = ylbl_plot
