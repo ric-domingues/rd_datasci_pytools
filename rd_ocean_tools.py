@@ -12,8 +12,13 @@ import fnmatch
 import os
 
 import rd_tseries_tools as rd_tseries
+import rd_file_tools as rd_file
+
 from scipy import signal
 from scipy import interpolate
+
+import zipfile
+import geopandas as gpd
 #========================================================= FUNCTION to list file_uses from AVISO RT and DT
 
 #--------------------------------------------------- Function to List AVISO RT and DT files
@@ -281,3 +286,21 @@ def read_oisst_sst(file_use,idvar):
   sst_out[sst_out<-1e3] = np.nan
   
   return sst_out, lon, lat
+
+
+#--------------------------------------------------- Function to plot the NHC hurricane cone
+
+def plot_NHC_cone(ax,shpfile_dir,conecolor='red'):
+
+  fp = rd_file.list_files(shpfile_dir,'*pgn*.shp')
+  data = gpd.read_file(shpfile_dir+'/'+fp[0])
+  data.plot(ax=ax, facecolor=conecolor,alpha=0.3,zorder=40);
+
+  fp = rd_file.list_files(shpfile_dir,'*lin*.shp')
+  data = gpd.read_file(shpfile_dir+'/'+fp[0])
+  data.plot(ax=ax, color=conecolor,alpha=0.8,zorder=40);
+
+  fp = rd_file.list_files(shpfile_dir,'*pts*.shp')
+  data = gpd.read_file(shpfile_dir+'/'+fp[0])
+  data.plot(ax=ax, color=conecolor,zorder=40,alpha=0.8, markersize=8);
+
