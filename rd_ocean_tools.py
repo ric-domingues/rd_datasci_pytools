@@ -290,11 +290,14 @@ def read_oisst_sst(file_use,idvar):
 
 #--------------------------------------------------- Function to plot the NHC hurricane cone
 
-def plot_NHC_cone(ax,shpfile_dir,conecolor='red'):
+def plot_NHC_cone(ax,shpfile_dir,conecolor='red',txtoffset=0.5):
 
   fp = rd_file.list_files(shpfile_dir,'*pgn*.shp')
   data = gpd.read_file(shpfile_dir+'/'+fp[0])
   data.plot(ax=ax, facecolor=conecolor,alpha=0.3,zorder=40);
+
+  TS_name = data["STORMNAME"].loc[0]
+
 
   fp = rd_file.list_files(shpfile_dir,'*lin*.shp')
   data = gpd.read_file(shpfile_dir+'/'+fp[0])
@@ -302,5 +305,17 @@ def plot_NHC_cone(ax,shpfile_dir,conecolor='red'):
 
   fp = rd_file.list_files(shpfile_dir,'*pts*.shp')
   data = gpd.read_file(shpfile_dir+'/'+fp[0])
-  data.plot(ax=ax, color=conecolor,zorder=40,alpha=0.8, markersize=8);
+  data.plot(ax=ax, color=conecolor,zorder=40,alpha=0.8, markersize=8);  
+
+  T = data['geometry'].loc[0]
+
+  ax.text(T.x+txtoffset,T.y,TS_name,fontweight='bold', zorder=40,color=conecolor)
+
+
+  return TS_name
+
+
+
+
+
 
