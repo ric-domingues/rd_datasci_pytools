@@ -12,8 +12,19 @@ import matplotlib.path as mpltPath
 
 from scipy import signal
 from scipy import interpolate
+
+from functools import partial
+
+import pyproj
+from shapely import geometry
+from shapely.geometry import Point
+from shapely.ops import transform
+
+
 # USAGE TO IMPORT
 #import rd_file_tools as rd_files
+
+
 
 # =============================================== Creates MAP and Includes Coastline
 def create_map(fig,axes_position,extent,lat_spc=5,lon_spc=5,land_res='50m',fcolor=[.3,.3,.3],ecolor='black',xlbl_plot=True,ylbl_plot=True,alp_grd=1,axs_wid=1,fsize=12):
@@ -81,6 +92,46 @@ def inpolygon(xv,yv,lon2,lat2):
   mask = grid.reshape(lon2.shape)
 
   return mask
+
+
+def create_circle(lonC,latC,km_rad):
+  """
+  Function to creare a circle polygon given lonC,latC, radius in km
+
+  Inputs:
+      - lonC = longitude of the center of the circle 
+      - latC = latitude of the center of the circle 
+      - km_rad = radius of desired circle in km
+  Outputs:
+      - xV = longitudinal edges of circle 
+      - yV = latitudinal edges of circle 
+  """
+  lon, lat = lonC, latC # lon lat for San Francisco
+  radius = km_rad*1e3  # in m
+
+  local_azimuthal_projection = "+proj=aeqd +R=6371000 +units=m +lat_0={} +lon_0={}".format(
+      lat, lon
+  )
+  wgs84_to_aeqd = partial(
+      pyproj.transform,
+      pyproj.Proj("+proj=longlat +datum=WGS84 +no_defs"),
+      pyproj.Proj(local_azimuthal_projection),
+  )
+  aeqd_to_wgs84 = partial(
+      pyproj.transform,
+      pyproj.Proj(local_azimuthal_projection),
+      pyproj.Proj("+proj=longlat +datum=WGS84 +no_defs"),
+  )
+
+  center = Point(float(lon), float(lat))
+  point_transformed = transform(wgs84_to_aeqd, center)
+  buffer = point_transformed.buffer(radius)
+  # Get the polygon with lat lon coordinates
+  circle_poly = transform(aeqd_to_wgs84, buffer)
+  xV, yV = circle_poly.exterior.coords.xy
+
+  return xV, yV
+
 
 #--------------------------------------------------- Function to fill 2D gaps in data
 def inpaint_nans(im0):
