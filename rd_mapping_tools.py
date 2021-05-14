@@ -9,6 +9,7 @@ import matplotlib.ticker as mticker
 import numpy as np
 import cartopy.io.shapereader as shpreader
 import matplotlib.path as mpltPath
+import matplotlib.pyplot as plt
 
 from scipy import signal
 from scipy import interpolate
@@ -27,9 +28,21 @@ from shapely.ops import transform
 
 
 # =============================================== Creates MAP and Includes Coastline
-def create_map(fig,axes_position,extent,lat_spc=5,lon_spc=5,land_res='50m',fcolor=[.3,.3,.3],ecolor='black',xlbl_plot=True,ylbl_plot=True,alp_grd=1,axs_wid=1,fsize=12):
+def map_subplots(nrows, ncols,currax):
 
-  ax = fig.add_axes(axes_position, projection=ccrs.PlateCarree())
+  ax = plt.subplot(nrows,ncols,currax,projection=ccrs.PlateCarree())
+
+  return ax
+
+
+# =============================================== Creates MAP and Includes Coastline
+def create_map(fig,axes_position,extent,lat_spc=5,lon_spc=5,land_res='50m',fcolor=[.3,.3,.3],ecolor='black',xlbl_plot=True,ylbl_plot=True,alp_grd=1,axs_wid=1,fsize=12,axes_use=False):
+
+  if axes_use==False:
+    ax = fig.add_axes(axes_position, projection=ccrs.PlateCarree())
+  else:
+    ax = axes_use
+
   ax.set_extent(extent, ccrs.PlateCarree())
 
   land_50m = NaturalEarthFeature('physical', 'land', land_res,
@@ -80,7 +93,7 @@ def add_US_states(ax,rcolor='darkblue',rwidth=1.5,ecolor=[.9,.9,.9],ralpha=1):
   states_shp = shpreader.natural_earth(resolution='110m',category='cultural', name=shapename)
 
   for astate in shpreader.Reader(states_shp).records():
-    ax.add_geometries([astate.geometry], ccrs.PlateCarree(),facecolor='none', edgecolor=[.9,.9,.9],linewidth=.5,zorder=26,alpha=ralpha)  
+    ax.add_geometries([astate.geometry], ccrs.PlateCarree(),facecolor='none', edgecolor=ecolor,linewidth=rwidth,zorder=26,alpha=ralpha)  
 
 #--------------------------------------------------- Function to find points inside polygon
 def inpolygon(xv,yv,lon2,lat2):
