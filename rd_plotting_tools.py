@@ -4,6 +4,7 @@
 #
 
 import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.path as mpltPath
 import os
@@ -42,6 +43,7 @@ def gen_plot1(var):
   ax1.plot(var)
   plt.show()
 
+#---------------------------------------------------
 def gen_plot2(x,y):
 
   fig = plt.figure(figsize=(4.5, 5))
@@ -50,3 +52,11 @@ def gen_plot2(x,y):
   plt.show()
   return ax1
 
+#---------------------------------------------------
+def label_point(x, y, val, ax,fsize=14,arrow=True):
+    a = pd.concat({'x': x, 'y': y, 'val': val}, axis=1)
+    for i, point in a.iterrows():
+        if arrow:
+          ax.annotate(point['val'],xy=(point['x'], point['y']),textcoords="offset points",arrowprops=dict(arrowstyle="->", color='black'),fontsize=fsize)
+        else:
+          ax.annotate(point['val'],xy=(point['x'], point['y']),textcoords="offset points",fontsize=fsize)          
