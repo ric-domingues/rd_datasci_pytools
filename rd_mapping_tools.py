@@ -36,7 +36,7 @@ def map_subplots(nrows, ncols,currax):
 
 
 # =============================================== Creates MAP and Includes Coastline
-def create_map(fig,axes_position,extent,lat_spc=5,lon_spc=5,land_res='50m',fcolor=[.3,.3,.3],ecolor='black',xlbl_plot=True,ylbl_plot=True,alp_grd=1,axs_wid=1,fsize=12,axes_use=False):
+def create_map(fig,axes_position,extent,lat_spc=5,lon_spc=5,land_res='50m',fcolor=[.3,.3,.3],ecolor='black',ewid=1,xlbl_plot=True,ylbl_plot=True,alp_grd=1,axs_wid=1,fsize=12,axes_use=False):
 
   if axes_use==False:
     ax = fig.add_axes(axes_position, projection=ccrs.PlateCarree())
@@ -48,15 +48,15 @@ def create_map(fig,axes_position,extent,lat_spc=5,lon_spc=5,land_res='50m',fcolo
   land_50m = NaturalEarthFeature('physical', 'land', land_res,
                                         edgecolor='face',
                                         facecolor='black')
-  ax.add_feature(land_50m, edgecolor=ecolor,facecolor=fcolor,zorder=10)
-  ax.add_feature(cfeature.BORDERS, edgecolor=ecolor,zorder=26,alpha=0.6)
+  ax.add_feature(land_50m, edgecolor=ecolor,facecolor=fcolor,zorder=10,linewidth=ewid)
+  ax.add_feature(cfeature.BORDERS, edgecolor=ecolor,zorder=26,alpha=0.6,linewidth=ewid)
   ax.outline_patch.set_linewidth(axs_wid)
 
   lat_ticks = np.arange(extent[2]-lat_spc*2, extent[3]+lat_spc*2, lat_spc)
   lon_ticks = np.arange(extent[0]-lon_spc*2, extent[1]+lon_spc*2, lon_spc)
 
   gl = ax.gridlines(draw_labels=True,linestyle="--", color='black',linewidth=.3,zorder=26,alpha=alp_grd)
-  gl.xlabels_top = gl.ylabels_right = False
+  gl.top_labels = gl.right_labels = False
   gl.ylocator = mticker.FixedLocator(lat_ticks)
   gl.xlocator = mticker.FixedLocator(lon_ticks)
 
@@ -65,8 +65,8 @@ def create_map(fig,axes_position,extent,lat_spc=5,lon_spc=5,land_res='50m',fcolo
   gl.xlabel_style = {'size': fsize}
   gl.ylabel_style = {'size': fsize}
 
-  gl.xlabels_bottom = xlbl_plot
-  gl.ylabels_left   = ylbl_plot
+  gl.bottom_labels = xlbl_plot
+  gl.left_labels   = ylbl_plot
 
   return ax
 
