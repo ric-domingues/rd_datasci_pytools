@@ -7,5 +7,5 @@ setup(name='rd_datasci_pytools',
       author='Ricardo Domingues',
       author_email='ricardormd@gmail.com',
       license='GNU',
-      packages=['rd_datasci_pytools'],
+      packages=['datasci_tools'],
       zip_safe=False)
